@@ -1,0 +1,11 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://payment-svc-db:5432/payment_svcdb
+    username: postgres
+    password: postgres
+
+  kafka:
+    bootstrap-servers: kafka:9092
+
+server:
+  port: 8083

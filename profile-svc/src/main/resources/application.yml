@@ -1,0 +1,22 @@
+spring:
+    application:
+        name: profile_svc
+    r2dbc:
+        url: r2dbc:postgresql://localhost:5432/profile_svcdb
+        username: postgres
+        password: postgres
+
+    kafka:
+        bootstrap-servers: localhost:9092
+    webflux:
+        base-path: /api/profile
+server:
+    port: 8081
+
+
+logging:
+    pattern:
+        level: "%5p"
+        console: "%d{yyyy-MM-dd HH:mm:ss} | %clr(%5p) | %X{traceId} | %m%n"
+    level:
+        root: INFO

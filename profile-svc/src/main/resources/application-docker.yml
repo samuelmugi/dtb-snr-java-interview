@@ -1,0 +1,11 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://profile-svc-db:5432/profile_svcdb
+    username: postgres
+    password: postgres
+
+  kafka:
+    bootstrap-servers: kafka:9092
+
+server:
+  port: 8081

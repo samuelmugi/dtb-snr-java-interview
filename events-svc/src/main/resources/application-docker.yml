@@ -1,0 +1,11 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://events-svc-db:5432/events_svcdb
+    username: postgres
+    password: postgres
+
+  kafka:
+    bootstrap-servers: kafka:9092
+
+server:
+  port: 8084

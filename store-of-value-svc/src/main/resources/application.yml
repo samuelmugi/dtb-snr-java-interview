@@ -1,0 +1,22 @@
+spring:
+    application:
+        name: store_of_value_svc
+    r2dbc:
+        url: r2dbc:postgresql://localhost:5432/store_of_value_svcdb
+        username: postgres
+        password: postgres
+
+    kafka:
+        bootstrap-servers: localhost:9092
+    webflux:
+        base-path: /api/store-of-value
+server:
+    port: 8082
+
+
+logging:
+    pattern:
+        level: "%5p"
+        console: "%d{yyyy-MM-dd HH:mm:ss} | %clr(%5p) | %X{traceId} | %m%n"
+    level:
+        root: INFO

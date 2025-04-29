@@ -1,0 +1,17 @@
+spring:
+    application:
+        name: events_svc
+    kafka:
+        bootstrap-servers: localhost:9092
+    webflux:
+        base-path: /api/events
+server:
+    port: 8084
+
+
+logging:
+    pattern:
+        level: "%5p"
+        console: "%d{yyyy-MM-dd HH:mm:ss} | %clr(%5p) | %X{traceId} | %m%n"
+    level:
+        root: INFO
