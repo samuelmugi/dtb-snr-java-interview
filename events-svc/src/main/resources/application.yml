@@ -15,3 +15,11 @@ logging:
         console: "%d{yyyy-MM-dd HH:mm:ss} | %clr(%5p) | %X{traceId} | %m%n"
     level:
         root: INFO
+
+springdoc:
+    swagger-ui:
+        path: /swagger-ui.html
+    api-docs:
+        path: /v3/api-docs
+    packages-to-scan: com.smugi.store_of_value_svc
+    paths-to-match: /auth/**

@@ -1,3 +1,6 @@
+server:
+  port: 8083
+
 spring:
   r2dbc:
     url: r2dbc:postgresql://payment-svc-db:5432/payment_svcdb
@@ -7,5 +10,28 @@ spring:
   kafka:
     bootstrap-servers: kafka:9092
 
-server:
-  port: 8083
+  webflux:
+    base-path: /api/payment
+
+
+
+r2dbc:
+  migrate:
+    enable: true
+    resources-path: classpath:/db/migration/*.sql
+    migrations-lock-table: payments_migrations
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+  packages-to-scan: com.smugi.payment_svc
+  paths-to-match: /auth/**
+
+logging:
+  pattern:
+    level: "%5p"
+    console: "%d{yyyy-MM-dd HH:mm:ss} | %clr(%5p) | %X{traceId} | %m%n"
+  level:
+    root: INFO

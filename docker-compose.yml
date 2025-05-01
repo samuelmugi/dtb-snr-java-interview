@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
@@ -26,6 +24,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: profile_svcdb
     volumes:
       - profile-svc-pgdata:/var/lib/postgresql/data
     ports:
@@ -48,6 +47,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: store_of_value_svcdb
     volumes:
       - store-of-value-svc-pgdata:/var/lib/postgresql/data
     ports:
@@ -70,6 +70,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: payment_svcdb
     volumes:
       - payment-svc-pgdata:/var/lib/postgresql/data
     ports:
@@ -92,6 +93,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: events_svcdb
     volumes:
       - events-svc-pgdata:/var/lib/postgresql/data
     ports:

@@ -7,5 +7,28 @@ spring:
   kafka:
     bootstrap-servers: kafka:9092
 
+    webflux:
+      base-path: /api/profile
 server:
   port: 8081
+
+r2dbc:
+  migrate:
+    enable: true
+    resources-path: classpath:/db/migration/*.sql
+    migrations-lock-table: profile_migrations
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+  packages-to-scan: com.smugi.profile_svc
+  paths-to-match: /auth/**
+
+logging:
+  pattern:
+    level: "%5p"
+    console: "%d{yyyy-MM-dd HH:mm:ss} | %clr(%5p) | %X{traceId} | %m%n"
+  level:
+    root: INFO

@@ -4,9 +4,9 @@ import com.smugi.profile_svc.model.UserProfile;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.security.Key;
 import java.util.Date;
 

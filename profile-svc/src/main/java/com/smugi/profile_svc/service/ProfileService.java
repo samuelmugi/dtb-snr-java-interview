@@ -25,8 +25,8 @@ public class ProfileService {
     public Mono<AuthResponse> register(RegisterRequest request) {
         return repository.findByEmail(request.getEmail())
             .flatMap(existing -> Mono.error(new RuntimeException("Email already in use")))
-            .switchIfEmpty(
-                repository.save(UserProfile.builder()
+            .switchIfEmpty(Mono.defer(() -> {
+              return  repository.save(UserProfile.builder()
                     .id(UUID.randomUUID())
                     .username(request.getUsername())
                     .email(request.getEmail())
@@ -35,15 +35,23 @@ public class ProfileService {
                     .active(true)
                     .createdAt(LocalDateTime.now())
                     .updatedAt(LocalDateTime.now())
-                    .build()
-                ).map(user -> new AuthResponse(jwtService.generateToken(user)))
-            );
+                    .build()   );}
+            ))
+            .map(user ->   AuthResponse.builder()
+                    .token(jwtService.generateToken((UserProfile) user))
+                    .build());
     }
 
     public Mono<AuthResponse> login(LoginRequest request) {
         return repository.findByEmail(request.getEmail())
-            .filter(user -> user.isActive() && passwordEncoder.matches(request.getPassword(), user.getPassword()))
-            .map(user -> new AuthResponse(jwtService.generateToken(user)))
-            .switchIfEmpty(Mono.error(new RuntimeException("Invalid credentials")));
+                .switchIfEmpty(Mono.error(new SecurityException("Invalid username or password")))
+                .flatMap(user -> {
+                    if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                        String token = jwtService.generateToken(user);
+                        return Mono.just(new AuthResponse(token));
+                    } else {
+                        return Mono.error(new SecurityException("Invalid username or password"));
+                    }
+                });
     }
 }

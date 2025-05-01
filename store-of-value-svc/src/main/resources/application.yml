@@ -1,3 +1,6 @@
+server:
+    port: 8082
+
 spring:
     application:
         name: store_of_value_svc
@@ -10,9 +13,22 @@ spring:
         bootstrap-servers: localhost:9092
     webflux:
         base-path: /api/store-of-value
-server:
-    port: 8082
 
+
+
+r2dbc:
+    migrate:
+        enable: true
+        resources-path: classpath:/db/migration/*.sql
+        migrations-lock-table: store_value_migrations
+
+springdoc:
+    swagger-ui:
+        path: /swagger-ui.html
+    api-docs:
+        path: /v3/api-docs
+    packages-to-scan: com.smugi.store_of_value_svc
+    paths-to-match: /auth/**
 
 logging:
     pattern:
