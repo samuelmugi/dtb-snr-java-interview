@@ -1,5 +1,6 @@
 package com.smugi.store_of_value_svc.handler;
 
+import com.smugi.store_of_value_svc.dto.AdjustBalanceRequest;
 import com.smugi.store_of_value_svc.dto.CreateAccountRequest;
 import com.smugi.store_of_value_svc.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -20,25 +21,54 @@ public class AccountHandler {
     public Mono<ServerResponse> create(ServerRequest request) {
         return request.bodyToMono(CreateAccountRequest.class)
                 .flatMap(service::create)
-                .flatMap(res -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(res));
+                .flatMap(res -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(res));
     }
 
     public Mono<ServerResponse> getById(ServerRequest request) {
         UUID id = UUID.fromString(request.pathVariable("id"));
         return service.getById(id)
-                .flatMap(res -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(res));
+                .flatMap(res -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(res))
+                .switchIfEmpty(ServerResponse.notFound().build());
     }
 
     public Mono<ServerResponse> getByCustomerId(ServerRequest request) {
         UUID customerId = UUID.fromString(request.pathVariable("customerId"));
         return service.getByCustomerId(customerId)
                 .collectList()
-                .flatMap(res -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(res));
+                .flatMap(res -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(res));
+    }
+
+    public Mono<ServerResponse> activate(ServerRequest request) {
+        UUID id = UUID.fromString(request.pathVariable("id"));
+        return service.activate(id)
+                .flatMap(res -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(res))
+                .switchIfEmpty(ServerResponse.notFound().build());
     }
 
     public Mono<ServerResponse> deactivate(ServerRequest request) {
         UUID id = UUID.fromString(request.pathVariable("id"));
         return service.deactivate(id)
-                .flatMap(res -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(res));
+                .flatMap(res -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(res))
+                .switchIfEmpty(ServerResponse.notFound().build());
+    }
+
+    public Mono<ServerResponse> adjustBalance(ServerRequest request) {
+        UUID id = UUID.fromString(request.pathVariable("id"));
+        return request.bodyToMono(AdjustBalanceRequest.class)
+                .flatMap(req -> service.adjustBalance(id, req.getAmount()))
+                .flatMap(res -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(res))
+                .switchIfEmpty(ServerResponse.notFound().build());
     }
 }

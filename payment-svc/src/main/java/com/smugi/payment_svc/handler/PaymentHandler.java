@@ -18,6 +18,8 @@ public class PaymentHandler {
     public Mono<ServerResponse> process(ServerRequest request) {
         return request.bodyToMono(TransactionRequest.class)
                 .flatMap(service::process)
-                .flatMap(res -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(res));
+                .flatMap(response -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(response));
     }
 }

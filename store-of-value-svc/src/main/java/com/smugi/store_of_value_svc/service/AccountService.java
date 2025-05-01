@@ -10,7 +10,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -37,10 +36,28 @@ public class AccountService {
         return repository.findByCustomerId(customerId).map(this::toResponse);
     }
 
+    public Mono<AccountResponse> activate(UUID id) {
+        return repository.findById(id)
+                .flatMap(acc -> {
+                    acc.setActive(true);
+                    return repository.save(acc);
+                })
+                .map(this::toResponse);
+    }
+
     public Mono<AccountResponse> deactivate(UUID id) {
         return repository.findById(id)
                 .flatMap(acc -> {
                     acc.setActive(false);
+                    return repository.save(acc);
+                })
+                .map(this::toResponse);
+    }
+
+    public Mono<AccountResponse> adjustBalance(UUID id, BigDecimal amount) {
+        return repository.findById(id)
+                .flatMap(acc -> {
+                    acc.setBalance(acc.getBalance().add(amount));
                     return repository.save(acc);
                 })
                 .map(this::toResponse);

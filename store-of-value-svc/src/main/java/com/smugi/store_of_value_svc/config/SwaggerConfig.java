@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
-                title = "Profile Service API",
+                title = "Store Of Value Service API",
                 version = "1.0",
-                description = "Documentation for Profile Service API"
+                description = "Documentation for Store Of Value Service API"
         )
 )
 public class SwaggerConfig {

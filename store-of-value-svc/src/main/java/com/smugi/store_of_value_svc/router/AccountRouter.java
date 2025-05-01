@@ -2,13 +2,13 @@ package com.smugi.store_of_value_svc.router;
 
 import com.smugi.store_of_value_svc.dto.AccountResponse;
 import com.smugi.store_of_value_svc.dto.CreateAccountRequest;
+import com.smugi.store_of_value_svc.dto.AdjustBalanceRequest;
 import com.smugi.store_of_value_svc.handler.AccountHandler;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
 import org.springframework.context.annotation.Bean;
@@ -22,92 +22,90 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 
 @Configuration
 public class AccountRouter {
+
     @RouterOperations({
-            @RouterOperation(
-                    path = "/accounts",
-                    produces = {MediaType.APPLICATION_JSON_VALUE},
-                    method = RequestMethod.POST,
-                    beanClass = AccountHandler.class,
-                    beanMethod = "create",
-                    operation = @Operation(
-                            operationId = "createAccount",
-                            summary = "Create a new account",
-                            tags = {"Account"},
-                            responses = {
-                                    @ApiResponse(responseCode = "200", description = "Successful operation",
-                                            content = @Content(schema = @Schema(implementation = AccountResponse.class))),
-                                    @ApiResponse(responseCode = "400", description = "Invalid input")
-                            },
-                            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                                    content = @Content(schema = @Schema(implementation = CreateAccountRequest.class))
-                            )
-                    )
-            ),
-            @RouterOperation(
-                    path = "/accounts/{id}",
-                    produces = {MediaType.APPLICATION_JSON_VALUE},
-                    method = RequestMethod.GET,
-                    beanClass = AccountHandler.class,
-                    beanMethod = "getById",
-                    operation = @Operation(
-                            operationId = "getAccountById",
-                            summary = "Get an account by ID",
-                            tags = {"Account"},
-                            parameters = {
-                                    @Parameter(in = ParameterIn.PATH, name = "id", description = "Account ID")
-                            },
-                            responses = {
-                                    @ApiResponse(responseCode = "200", description = "Successful operation",
-                                            content = @Content(schema = @Schema(implementation = AccountResponse.class))),
-                                    @ApiResponse(responseCode = "404", description = "Account not found")
-                            }
-                    )
-            ),
-            @RouterOperation(
-                    path = "/accounts/customer/{customerId}",
-                    produces = {MediaType.APPLICATION_JSON_VALUE},
-                    method = RequestMethod.GET,
-                    beanClass = AccountHandler.class,
-                    beanMethod = "getByCustomerId",
-                    operation = @Operation(
-                            operationId = "getAccountsByCustomerId",
-                            summary = "Get accounts by customer ID",
-                            tags = {"Account"},
-                            parameters = {
-                                    @Parameter(in = ParameterIn.PATH, name = "customerId", description = "Customer ID")
-                            },
-                            responses = {
-                                    @ApiResponse(responseCode = "200", description = "Successful operation",
-                                            content = @Content(schema = @Schema(implementation = AccountResponse.class)))
-                            }
-                    )
-            ),
-            @RouterOperation(
-                    path = "/accounts/{id}/deactivate",
-                    produces = {MediaType.APPLICATION_JSON_VALUE},
-                    method = RequestMethod.PATCH,
-                    beanClass = AccountHandler.class,
-                    beanMethod = "deactivate",
-                    operation = @Operation(
-                            operationId = "deactivateAccount",
-                            summary = "Deactivate an account",
-                            tags = {"Account"},
-                            parameters = {
-                                    @Parameter(in = ParameterIn.PATH, name = "id", description = "Account ID")
-                            },
-                            responses = {
-                                    @ApiResponse(responseCode = "200", description = "Successful operation",
-                                            content = @Content(schema = @Schema(implementation = AccountResponse.class))),
-                                    @ApiResponse(responseCode = "404", description = "Account not found")
-                            }
-                    )
+        @RouterOperation(
+            path = "/accounts",
+            method = RequestMethod.POST,
+            beanClass = AccountHandler.class,
+            beanMethod = "create",
+            operation = @Operation(
+                summary = "Create account",
+                requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = CreateAccountRequest.class))),
+                responses = {
+                    @ApiResponse(responseCode = "200", description = "Created", content = @Content(schema = @Schema(implementation = AccountResponse.class)))
+                }
             )
+        ),
+        @RouterOperation(
+            path = "/accounts/{id}",
+            method = RequestMethod.GET,
+            beanClass = AccountHandler.class,
+            beanMethod = "getById",
+            operation = @Operation(
+                summary = "Get account by ID",
+                responses = {
+                    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = AccountResponse.class)))
+                }
+            )
+        ),
+        @RouterOperation(
+            path = "/accounts/customer/{customerId}",
+            method = RequestMethod.GET,
+            beanClass = AccountHandler.class,
+            beanMethod = "getByCustomerId",
+            operation = @Operation(
+                summary = "Get accounts by customer ID",
+                responses = {
+                    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = AccountResponse.class)))
+                }
+            )
+        ),
+        @RouterOperation(
+            path = "/accounts/{id}/activate",
+            method = RequestMethod.PATCH,
+            beanClass = AccountHandler.class,
+            beanMethod = "activate",
+            operation = @Operation(
+                summary = "Activate account",
+                responses = {
+                    @ApiResponse(responseCode = "200", description = "Account activated", content = @Content(schema = @Schema(implementation = AccountResponse.class)))
+                }
+            )
+        ),
+        @RouterOperation(
+            path = "/accounts/{id}/deactivate",
+            method = RequestMethod.PATCH,
+            beanClass = AccountHandler.class,
+            beanMethod = "deactivate",
+            operation = @Operation(
+                summary = "Deactivate account",
+                responses = {
+                    @ApiResponse(responseCode = "200", description = "Account deactivated", content = @Content(schema = @Schema(implementation = AccountResponse.class)))
+                }
+            )
+        ),
+        @RouterOperation(
+            path = "/accounts/{id}/adjust-balance",
+            method = RequestMethod.PATCH,
+            beanClass = AccountHandler.class,
+            beanMethod = "adjustBalance",
+            operation = @Operation(
+                summary = "Adjust account balance",
+                requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = AdjustBalanceRequest.class))),
+                responses = {
+                    @ApiResponse(responseCode = "200", description = "Balance adjusted", content = @Content(schema = @Schema(implementation = AccountResponse.class)))
+                }
+            )
+        )
     })
     @Bean
-    public RouterFunction<?> routes(AccountHandler handler) {
+    public RouterFunction<?> accountRoutes(AccountHandler handler) {
         return route(POST("/accounts"), handler::create)
-                .andRoute(GET("/accounts/{id}"), handler::getById)
-                .andRoute(GET("/accounts/customer/{customerId}"), handler::getByCustomerId)
-                .andRoute(PATCH("/accounts/{id}/deactivate"), handler::deactivate);
+            .andRoute(GET("/accounts/{id}"), handler::getById)
+            .andRoute(GET("/accounts/customer/{customerId}"), handler::getByCustomerId)
+            .andRoute(PATCH("/accounts/{id}/activate"), handler::activate)
+            .andRoute(PATCH("/accounts/{id}/deactivate"), handler::deactivate)
+            .andRoute(PATCH("/accounts/{id}/adjust-balance"), handler::adjustBalance);
     }
 }

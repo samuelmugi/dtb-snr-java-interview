@@ -19,7 +19,7 @@ public class Transaction {
     private UUID fromAccountId;
     private UUID toAccountId;
     private BigDecimal amount;
-    private String type; // TOPUP, WITHDRAWAL, TRANSFER
-    private String status; // PENDING, SUCCESS, FAILED
+    private String type;
+    private String status;
     private LocalDateTime createdAt;
 }

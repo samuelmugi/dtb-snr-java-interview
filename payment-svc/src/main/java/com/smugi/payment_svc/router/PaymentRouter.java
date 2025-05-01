@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
 import org.springframework.context.annotation.Bean;
@@ -22,33 +23,30 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class PaymentRouter {
 
     @RouterOperations({
-            @RouterOperation(
-                    path = "/transactions",
-                    produces = {MediaType.APPLICATION_JSON_VALUE},
-                    method = RequestMethod.POST,
-                    beanClass = PaymentHandler.class,
-                    beanMethod = "process",
-                    operation = @Operation(
-                            operationId = "processTransaction",
-                            summary = "Process a new transaction",
-                            tags = {"Payment"},
-                            responses = {
-                                    @ApiResponse(
-                                            responseCode = "200",
-                                            description = "Successful transaction",
-                                            content = @Content(schema = @Schema(implementation = TransactionResponse.class))
-                                    ),
-                                    @ApiResponse(responseCode = "400", description = "Invalid input"),
-                                    @ApiResponse(responseCode = "500", description = "Internal server error")
-                            },
-                            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                                    content = @Content(schema = @Schema(implementation = TransactionRequest.class))
-                            )
-                    )
+        @RouterOperation(
+            path = "/transactions",
+            method = RequestMethod.POST,
+            beanClass = PaymentHandler.class,
+            beanMethod = "process",
+            operation = @Operation(
+                summary = "Process a transaction (TOPUP, WITHDRAWAL, TRANSFER)",
+                requestBody = @RequestBody(
+                    content = @Content(schema = @Schema(implementation = TransactionRequest.class))
+                ),
+                responses = {
+                    @ApiResponse(
+                        responseCode = "200",
+                        description = "Transaction processed",
+                        content = @Content(schema = @Schema(implementation = TransactionResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Invalid transaction request"),
+                    @ApiResponse(responseCode = "500", description = "Server error")
+                }
             )
+        )
     })
     @Bean
-    public RouterFunction<?> routes(PaymentHandler handler) {
+    public RouterFunction<?> transactionRoutes(PaymentHandler handler) {
         return route(POST("/transactions"), handler::process);
     }
 }
