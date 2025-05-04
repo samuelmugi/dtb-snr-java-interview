@@ -1,3 +1,4 @@
+
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
@@ -33,7 +34,7 @@ services:
   profile-svc:
     build:
       context: .
-      dockerfile: profile-svc/Dockerfile
+      dockerfile: Dockerfile.profile
     ports:
       - "8081:8081"
     environment:
@@ -56,7 +57,7 @@ services:
   store-of-value-svc:
     build:
       context: .
-      dockerfile: store-of-value-svc/Dockerfile
+      dockerfile: Dockerfile.store
     ports:
       - "8082:8082"
     environment:
@@ -79,7 +80,7 @@ services:
   payment-svc:
     build:
       context: .
-      dockerfile: payment-svc/Dockerfile
+      dockerfile: Dockerfile.payment
     ports:
       - "8083:8083"
     environment:
@@ -102,7 +103,7 @@ services:
   events-svc:
     build:
       context: .
-      dockerfile: events-svc/Dockerfile
+      dockerfile: Dockerfile.events
     ports:
       - "8084:8084"
     environment:
